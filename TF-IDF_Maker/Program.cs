@@ -11,7 +11,7 @@ namespace TF_IDF_Maker
         {
             TFIDFCalculator tfidfCalculator = new TFIDFCalculator();
 
-            string fileName = "yelp_labelled.txt";
+            string fileName = "..//..//..//Data//yelp_labelled.txt";
 
             List<TFIDFNote> dictionary = tfidfCalculator.GetIFIDFDictionary(fileName);
 
