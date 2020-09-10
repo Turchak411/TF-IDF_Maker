@@ -30,34 +30,7 @@ namespace TF_IDF_Maker.Services
                 List<List<string>> documents = fileManager.LoadDocuments(filePathList);
 
                 // Fill TF-IDF dictionary and return:
-                List<TFIDFNote> dictionary = new List<TFIDFNote>();
-
-                for (int i = 0; i < documents.Count; i++)
-                {
-                    for (int k = 0; k < documents[i].Count; k++)
-                    {
-                        TFIDFNote tfidfNote = new TFIDFNote();
-                        tfidfNote.Word = documents[i][k];
-
-                        // Fill the values list for each document:
-                        // With word stemming:
-                        EnglishPorter2Stemmer englishPorter = new EnglishPorter2Stemmer();
-                        tfidfNote.ValuesList = new List<TFIDFValue>();
-                        for (int j = 0; j < documents.Count; j++)
-                        {
-                            tfidfNote.ValuesList.Add(
-                                new TFIDFValue
-                                {
-                                    DocumentName = filePathList[j],
-                                    Value = GetTFIDFValue(englishPorter.Stem(documents[i][k]), documents[j], documents)
-                                });
-                        }
-
-                        dictionary.Add(tfidfNote);
-                    }
-                }
-
-                return dictionary;
+                return GetFilledDictionary(documents, filePathList);
             }
             catch
             {
@@ -81,39 +54,44 @@ namespace TF_IDF_Maker.Services
                 List<List<string>> documents = fileManager.LoadDocuments(filePathList);
 
                 // Fill TF-IDF dictionary and return:
-                List<TFIDFNote> dictionary = new List<TFIDFNote>();
-
-                for (int i = 0; i < documents.Count; i++)
-                {
-                    for (int k = 0; k < documents[i].Count; k++)
-                    {
-                        TFIDFNote tfidfNote = new TFIDFNote();
-                        tfidfNote.Word = documents[i][k];
-
-                        // Fill the values list for each document:
-                        // With word stemming:
-                        EnglishPorter2Stemmer englishPorter = new EnglishPorter2Stemmer();
-                        tfidfNote.ValuesList = new List<TFIDFValue>();
-                        for (int j = 0; j < documents.Count; j++)
-                        {
-                            tfidfNote.ValuesList.Add(
-                                new TFIDFValue
-                                {
-                                    DocumentName = filePathList[j],
-                                    Value = GetTFIDFValue(englishPorter.Stem(documents[i][k]), documents[j], documents)
-                                });
-                        }
-
-                        dictionary.Add(tfidfNote);
-                    }
-                }
-
-                return dictionary;
+                return GetFilledDictionary(documents, filePathList);
             }
             catch
             {
                 return new List<TFIDFNote>();
             }
+        }
+
+        private List<TFIDFNote> GetFilledDictionary(List<List<string>> documents, List<string> filePathList)
+        {
+            List<TFIDFNote> dictionary = new List<TFIDFNote>();
+
+            for (int i = 0; i < documents.Count; i++)
+            {
+                for (int k = 0; k < documents[i].Count; k++)
+                {
+                    TFIDFNote tfidfNote = new TFIDFNote();
+                    tfidfNote.Word = documents[i][k];
+
+                    // Fill the values list for each document:
+                    // With word stemming:
+                    EnglishPorter2Stemmer englishPorter = new EnglishPorter2Stemmer();
+                    tfidfNote.ValuesList = new List<TFIDFValue>();
+                    for (int j = 0; j < documents.Count; j++)
+                    {
+                        tfidfNote.ValuesList.Add(
+                            new TFIDFValue
+                            {
+                                DocumentName = filePathList[j],
+                                Value = GetTFIDFValue(englishPorter.Stem(documents[i][k]), documents[j], documents)
+                            });
+                    }
+
+                    dictionary.Add(tfidfNote);
+                }
+            }
+
+            return dictionary;
         }
 
         private double GetTFIDFValue(StemmedWord word, List<string> currentDocument, List<List<string>> allDocuments)
