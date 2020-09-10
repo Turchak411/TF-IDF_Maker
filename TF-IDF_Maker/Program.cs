@@ -19,14 +19,14 @@ namespace TF_IDF_Maker
 
             PrintValues(dictionary);
 
-            fileManager.SaveValues(dictionary);
+            //fileManager.SaveValues(dictionary);
 
             Console.ReadKey();
         }
 
         private static void PrintValues(List<TFIDFNote> dictionary)
         {
-            for (int i = 0; i < 15; i++) //dictionary.Count; i++)
+            for (int i = 0; i < 15; i++)
             {
                 Console.WriteLine($"=======================================\nWord: {dictionary[i].Word}" +
                                   "\n=======================================\nTFIDF values:");

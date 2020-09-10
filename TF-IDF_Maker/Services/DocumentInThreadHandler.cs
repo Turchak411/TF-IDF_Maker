@@ -7,7 +7,7 @@ namespace TF_IDF_Maker.Services
 {
     public class DocumentInThreadHandler
     {
-        public List<TFIDFNote> DocumentDictionary { get; set; }
+        public List<TFIDFNote> DocumentDictionary { get; set; } = new List<TFIDFNote>();
 
         private List<List<string>> _documents;
 
