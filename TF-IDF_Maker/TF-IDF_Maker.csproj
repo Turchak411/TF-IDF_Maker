@@ -9,9 +9,9 @@
     <Company>DataScope</Company>
     <Description>Library for getting TF-IDF values for Sentiment Analysis (Requires one general file with structured positive and negative rows with identificator at the end one (like in the example))
 Identificators: 1 - Positive, 0 - Negative</Description>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
-    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
+    <Version>1.0.2</Version>
     <PackageProjectUrl>https://github.com/Turchak411/TF-IDF_Maker</PackageProjectUrl>
   </PropertyGroup>
 

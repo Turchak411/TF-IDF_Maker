@@ -66,12 +66,12 @@ namespace TF_IDF_Maker.Services
             List<TFIDFNote> dictionary = new List<TFIDFNote>();
 
             // Multithreading in document handling:
-            List<DocumentInThreadHandler> docThreadHandlers = new List<DocumentInThreadHandler>();
+            List<SingleDocumentHandler> docThreadHandlers = new List<SingleDocumentHandler>();
             List<Thread> threadListHandling = new List<Thread>();
 
             for (int i = 0; i < documents.Count; i++)
             {
-                DocumentInThreadHandler docThreadHandler = new DocumentInThreadHandler(documents, i, filePathList);
+                SingleDocumentHandler docThreadHandler = new SingleDocumentHandler(documents, i, filePathList);
                 docThreadHandlers.Add(docThreadHandler);
 
                 threadListHandling.Add(new Thread(docThreadHandlers[i].Handle));
