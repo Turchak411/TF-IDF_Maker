@@ -7,18 +7,6 @@ namespace TF_IDF_Maker.Services
 {
     public class FileManager
     {
-        public string ResultsFolder { get; set; }
-
-        public FileManager()
-        {
-            ResultsFolder = "..//..//..//Data//Results";
-
-            if (!Directory.Exists(ResultsFolder))
-            {
-                Directory.CreateDirectory(ResultsFolder);
-            }
-        }
-
         /// <summary>
         /// Load dictionary from structured .txt document
         /// Where every positive and negative sentences write in rows with identificator at the ends
@@ -111,7 +99,7 @@ namespace TF_IDF_Maker.Services
 
         public void WriteValues(List<TFIDFNote> values, string path)
         {
-            using (StreamWriter fileWriter = new StreamWriter(Path.Combine(ResultsFolder, path)))
+            using (StreamWriter fileWriter = new StreamWriter(path))
             {
                 for (int i = 0; i < values.Count; i++)
                 {
