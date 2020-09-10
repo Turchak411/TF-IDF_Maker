@@ -1,9 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>TF_IDF_Maker</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Turchak Alexander, Andrey Shchelokov</Authors>
+    <Company>DataScope</Company>
+    <Description>Library for getting TF-IDF values for Sentiment Analysis (Requires one general file with structured positive and negative rows with identificator at the end one (like in the example))</Description>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
+    <Version>1.0.1</Version>
+    <PackageProjectUrl>https://github.com/Turchak411/TF-IDF_Maker</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

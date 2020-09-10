@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.VisualBasic;
 using TF_IDF_Maker.Model;
 
 namespace TF_IDF_Maker.Services
@@ -20,6 +19,13 @@ namespace TF_IDF_Maker.Services
             }
         }
 
+        /// <summary>
+        /// Load dictionary from structured .txt document
+        /// Where every positive and negative sentences write in rows with identificator at the ends
+        /// Identificators: 1 - Positive, 0 - Negative
+        /// </summary>
+        /// <param name="filePathList"></param>
+        /// <returns></returns>
         public List<List<string>> LoadDocuments(List<string> filePathList)
         {
             List<List<string>> documentsContentList = new List<List<string>>();
