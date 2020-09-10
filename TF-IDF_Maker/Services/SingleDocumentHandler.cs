@@ -5,7 +5,7 @@ using TF_IDF_Maker.Model;
 
 namespace TF_IDF_Maker.Services
 {
-    public class DocumentInThreadHandler
+    public class SingleDocumentHandler
     {
         public List<TFIDFNote> DocumentDictionary { get; set; } = new List<TFIDFNote>();
 
@@ -15,9 +15,9 @@ namespace TF_IDF_Maker.Services
 
         private List<string> _filePathList;
 
-        private DocumentInThreadHandler() { }
+        private SingleDocumentHandler() { }
 
-        public DocumentInThreadHandler(List<List<string>> documents, int documentIndex, List<string> filePathList)
+        public SingleDocumentHandler(List<List<string>> documents, int documentIndex, List<string> filePathList)
         {
             _documents = documents;
             _documentIndex = documentIndex;
