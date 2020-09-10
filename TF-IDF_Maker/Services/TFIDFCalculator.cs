@@ -18,88 +18,102 @@ namespace TF_IDF_Maker.Services
 
         public List<TFIDFNote> GetIFIDFDictionaryFromDocuments(string positiveDocumentPath, string negativeDocumentPath)
         {
-            // Divide general file and load words from positive& negative documents:
-            FileManager fileManager = new FileManager();
-
-            List<string> filePathList = new List<string>();
-            filePathList.Add(positiveDocumentPath);
-            filePathList.Add(negativeDocumentPath);
-
-            List<List<string>> documents = fileManager.LoadDocuments(filePathList);
-
-            // Fill TF-IDF dictionary and return:
-            List<TFIDFNote> dictionary = new List<TFIDFNote>();
-
-            for (int i = 0; i < documents.Count; i++)
+            try
             {
-                for (int k = 0; k < documents[i].Count; k++)
+                // Divide general file and load words from positive& negative documents:
+                FileManager fileManager = new FileManager();
+
+                List<string> filePathList = new List<string>();
+                filePathList.Add(positiveDocumentPath);
+                filePathList.Add(negativeDocumentPath);
+
+                List<List<string>> documents = fileManager.LoadDocuments(filePathList);
+
+                // Fill TF-IDF dictionary and return:
+                List<TFIDFNote> dictionary = new List<TFIDFNote>();
+
+                for (int i = 0; i < documents.Count; i++)
                 {
-                    TFIDFNote tfidfNote = new TFIDFNote();
-                    tfidfNote.Word = documents[i][k];
-
-                    // Fill the values list for each document:
-                    // With word stemming:
-                    EnglishPorter2Stemmer englishPorter = new EnglishPorter2Stemmer();
-                    tfidfNote.ValuesList = new List<TFIDFValue>();
-                    for (int j = 0; j < documents.Count; j++)
+                    for (int k = 0; k < documents[i].Count; k++)
                     {
-                        tfidfNote.ValuesList.Add(
-                            new TFIDFValue
-                            {
-                                DocumentName = filePathList[j],
-                                Value = GetTFIDFValue(englishPorter.Stem(documents[i][k]), documents[j], documents)
-                            });
+                        TFIDFNote tfidfNote = new TFIDFNote();
+                        tfidfNote.Word = documents[i][k];
+
+                        // Fill the values list for each document:
+                        // With word stemming:
+                        EnglishPorter2Stemmer englishPorter = new EnglishPorter2Stemmer();
+                        tfidfNote.ValuesList = new List<TFIDFValue>();
+                        for (int j = 0; j < documents.Count; j++)
+                        {
+                            tfidfNote.ValuesList.Add(
+                                new TFIDFValue
+                                {
+                                    DocumentName = filePathList[j],
+                                    Value = GetTFIDFValue(englishPorter.Stem(documents[i][k]), documents[j], documents)
+                                });
+                        }
+
+                        dictionary.Add(tfidfNote);
                     }
-
-                    dictionary.Add(tfidfNote);
                 }
-            }
 
-            return dictionary;
+                return dictionary;
+            }
+            catch
+            {
+                return new List<TFIDFNote>();
+            }
         }
 
         public List<TFIDFNote> GetIFIDFDictionaryFromStructuredDocument(string generalFilename)
         {
-            // Divide general file and load words from positive& negative documents:
-            FileManager fileManager = new FileManager();
-
-            fileManager.DivideDocument(generalFilename);
-
-            List<string> filePathList = new List<string>();
-            filePathList.Add("positive.txt");
-            filePathList.Add("negative.txt");
-
-            List<List<string>> documents = fileManager.LoadDocuments(filePathList);
-
-            // Fill TF-IDF dictionary and return:
-            List<TFIDFNote> dictionary = new List<TFIDFNote>();
-
-            for (int i = 0; i < documents.Count; i++)
+            try
             {
-                for (int k = 0; k < documents[i].Count; k++)
+                // Divide general file and load words from positive& negative documents:
+                FileManager fileManager = new FileManager();
+
+                fileManager.DivideDocument(generalFilename);
+
+                List<string> filePathList = new List<string>();
+                filePathList.Add("positive.txt");
+                filePathList.Add("negative.txt");
+
+                List<List<string>> documents = fileManager.LoadDocuments(filePathList);
+
+                // Fill TF-IDF dictionary and return:
+                List<TFIDFNote> dictionary = new List<TFIDFNote>();
+
+                for (int i = 0; i < documents.Count; i++)
                 {
-                    TFIDFNote tfidfNote = new TFIDFNote();
-                    tfidfNote.Word = documents[i][k];
-
-                    // Fill the values list for each document:
-                    // With word stemming:
-                    EnglishPorter2Stemmer englishPorter = new EnglishPorter2Stemmer();
-                    tfidfNote.ValuesList = new List<TFIDFValue>();
-                    for (int j = 0; j < documents.Count; j++)
+                    for (int k = 0; k < documents[i].Count; k++)
                     {
-                        tfidfNote.ValuesList.Add(
-                            new TFIDFValue
-                            {
-                                DocumentName = filePathList[j],
-                                Value = GetTFIDFValue(englishPorter.Stem(documents[i][k]), documents[j], documents)
-                            });
+                        TFIDFNote tfidfNote = new TFIDFNote();
+                        tfidfNote.Word = documents[i][k];
+
+                        // Fill the values list for each document:
+                        // With word stemming:
+                        EnglishPorter2Stemmer englishPorter = new EnglishPorter2Stemmer();
+                        tfidfNote.ValuesList = new List<TFIDFValue>();
+                        for (int j = 0; j < documents.Count; j++)
+                        {
+                            tfidfNote.ValuesList.Add(
+                                new TFIDFValue
+                                {
+                                    DocumentName = filePathList[j],
+                                    Value = GetTFIDFValue(englishPorter.Stem(documents[i][k]), documents[j], documents)
+                                });
+                        }
+
+                        dictionary.Add(tfidfNote);
                     }
-
-                    dictionary.Add(tfidfNote);
                 }
-            }
 
-            return dictionary;
+                return dictionary;
+            }
+            catch
+            {
+                return new List<TFIDFNote>();
+            }
         }
 
         private double GetTFIDFValue(StemmedWord word, List<string> currentDocument, List<List<string>> allDocuments)
