@@ -6,4 +6,8 @@
     <RootNamespace>TF_IDF_Maker</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Porter2Stemmer" Version="1.0.0" />
+  </ItemGroup>
+
 </Project>

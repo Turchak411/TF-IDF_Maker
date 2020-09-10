@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Porter2Stemmer;
 using TF_IDF_Maker.Model;
 
 namespace TF_IDF_Maker.Services
@@ -39,6 +40,8 @@ namespace TF_IDF_Maker.Services
                     tfidfNote.Word = documents[i][k];
 
                     // Fill the values list for each document:
+                    // With word stemming:
+                    EnglishPorter2Stemmer englishPorter = new EnglishPorter2Stemmer();
                     tfidfNote.ValuesList = new List<TFIDFValue>();
                     for (int j = 0; j < documents.Count; j++)
                     {
@@ -46,7 +49,7 @@ namespace TF_IDF_Maker.Services
                             new TFIDFValue
                             {
                                 DocumentName = filePathList[j],
-                                Value = GetTFIDFValue(documents[i][k], documents[j], documents)
+                                Value = GetTFIDFValue(englishPorter.Stem(documents[i][k]), documents[j], documents)
                             });
                     }
 
@@ -57,24 +60,24 @@ namespace TF_IDF_Maker.Services
             return dictionary;
         }
 
-        private double GetTFIDFValue(string word, List<string> currentDocument, List<List<string>> allDocuments)
+        private double GetTFIDFValue(StemmedWord word, List<string> currentDocument, List<List<string>> allDocuments)
         {
             return GetTFValue(word, currentDocument) * GetIDFValue(word, allDocuments);
         }
 
-        private double GetTFValue(string word, List<string> document)
+        private double GetTFValue(StemmedWord word, List<string> document)
         {
-            int countOfOccurs = document.FindAll(x => x == word).Count;
+            int countOfOccurs = document.FindAll(x => x == word.Unstemmed).Count;
             return (double)countOfOccurs / (double)document.Count;
         }
 
-        private double GetIDFValue(string word, List<List<string>> allDocuments)
+        private double GetIDFValue(StemmedWord word, List<List<string>> allDocuments)
         {
             int countOfDocOccurs = 0;
 
             for (int i = 0; i < allDocuments.Count; i++)
             {
-                countOfDocOccurs += allDocuments[i].Contains(word) ? 1 : 0;
+                countOfDocOccurs += allDocuments[i].Contains(word.Unstemmed) ? 1 : 0;
             }
 
             return Math.Log10((double)allDocuments.Count / (double)countOfDocOccurs);
