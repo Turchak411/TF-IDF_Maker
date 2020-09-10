@@ -9,12 +9,23 @@ namespace TF_IDF_Maker
     {
         static void Main(string[] args)
         {
-            TFIDFCalculator tfidfCalculator = new TFIDFCalculator();
+            FileManager fileManager = new FileManager();
+
+            TFIDFCalculator tfidfCalculator = new TFIDFCalculator(fileManager);
 
             string fileName = "..//..//..//Data//yelp_labelled.txt";
 
             List<TFIDFNote> dictionary = tfidfCalculator.GetIFIDFDictionary(fileName);
 
+            PrintValues(dictionary);
+
+            fileManager.SaveValues(dictionary);
+
+            Console.ReadKey();
+        }
+
+        private static void PrintValues(List<TFIDFNote> dictionary)
+        {
             for (int i = 0; i < 15; i++) //dictionary.Count; i++)
             {
                 Console.WriteLine($"=======================================\nWord: {dictionary[i].Word}" +
@@ -28,8 +39,6 @@ namespace TF_IDF_Maker
 
                 Console.WriteLine("=======================================\n");
             }
-
-            Console.ReadKey();
         }
     }
 }

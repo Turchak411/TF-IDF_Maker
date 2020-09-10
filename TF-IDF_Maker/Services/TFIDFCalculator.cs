@@ -6,6 +6,15 @@ namespace TF_IDF_Maker.Services
 {
     public class TFIDFCalculator
     {
+        private FileManager _fileManager;
+
+        private TFIDFCalculator() { }
+
+        public TFIDFCalculator(FileManager fileManager)
+        {
+            _fileManager = fileManager;
+        }
+
         public List<TFIDFNote> GetIFIDFDictionary(string generalFilename)
         {
             // Divide general file and load words from positive& negative documents:
