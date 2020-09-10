@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Porter2Stemmer;
+﻿using System.Collections.Generic;
+using System.Threading;
 using TF_IDF_Maker.Model;
 
 namespace TF_IDF_Maker.Services
@@ -30,34 +29,7 @@ namespace TF_IDF_Maker.Services
                 List<List<string>> documents = fileManager.LoadDocuments(filePathList);
 
                 // Fill TF-IDF dictionary and return:
-                List<TFIDFNote> dictionary = new List<TFIDFNote>();
-
-                for (int i = 0; i < documents.Count; i++)
-                {
-                    for (int k = 0; k < documents[i].Count; k++)
-                    {
-                        TFIDFNote tfidfNote = new TFIDFNote();
-                        tfidfNote.Word = documents[i][k];
-
-                        // Fill the values list for each document:
-                        // With word stemming:
-                        EnglishPorter2Stemmer englishPorter = new EnglishPorter2Stemmer();
-                        tfidfNote.ValuesList = new List<TFIDFValue>();
-                        for (int j = 0; j < documents.Count; j++)
-                        {
-                            tfidfNote.ValuesList.Add(
-                                new TFIDFValue
-                                {
-                                    DocumentName = filePathList[j],
-                                    Value = GetTFIDFValue(englishPorter.Stem(documents[i][k]), documents[j], documents)
-                                });
-                        }
-
-                        dictionary.Add(tfidfNote);
-                    }
-                }
-
-                return dictionary;
+                return GetFilledDictionary(documents, filePathList);
             }
             catch
             {
@@ -81,34 +53,7 @@ namespace TF_IDF_Maker.Services
                 List<List<string>> documents = fileManager.LoadDocuments(filePathList);
 
                 // Fill TF-IDF dictionary and return:
-                List<TFIDFNote> dictionary = new List<TFIDFNote>();
-
-                for (int i = 0; i < documents.Count; i++)
-                {
-                    for (int k = 0; k < documents[i].Count; k++)
-                    {
-                        TFIDFNote tfidfNote = new TFIDFNote();
-                        tfidfNote.Word = documents[i][k];
-
-                        // Fill the values list for each document:
-                        // With word stemming:
-                        EnglishPorter2Stemmer englishPorter = new EnglishPorter2Stemmer();
-                        tfidfNote.ValuesList = new List<TFIDFValue>();
-                        for (int j = 0; j < documents.Count; j++)
-                        {
-                            tfidfNote.ValuesList.Add(
-                                new TFIDFValue
-                                {
-                                    DocumentName = filePathList[j],
-                                    Value = GetTFIDFValue(englishPorter.Stem(documents[i][k]), documents[j], documents)
-                                });
-                        }
-
-                        dictionary.Add(tfidfNote);
-                    }
-                }
-
-                return dictionary;
+                return GetFilledDictionary(documents, filePathList);
             }
             catch
             {
@@ -116,27 +61,52 @@ namespace TF_IDF_Maker.Services
             }
         }
 
-        private double GetTFIDFValue(StemmedWord word, List<string> currentDocument, List<List<string>> allDocuments)
+        private List<TFIDFNote> GetFilledDictionary(List<List<string>> documents, List<string> filePathList)
         {
-            return GetTFValue(word, currentDocument) * GetIDFValue(word, allDocuments);
-        }
+            List<TFIDFNote> dictionary = new List<TFIDFNote>();
 
-        private double GetTFValue(StemmedWord word, List<string> document)
-        {
-            int countOfOccurs = document.FindAll(x => x == word.Unstemmed).Count;
-            return (double)countOfOccurs / (double)document.Count;
-        }
+            // Multithreading in document handling:
+            List<DocumentInThreadHandler> docThreadHandlers = new List<DocumentInThreadHandler>();
+            List<Thread> threadListHandling = new List<Thread>();
 
-        private double GetIDFValue(StemmedWord word, List<List<string>> allDocuments)
-        {
-            int countOfDocOccurs = 0;
-
-            for (int i = 0; i < allDocuments.Count; i++)
+            for (int i = 0; i < documents.Count; i++)
             {
-                countOfDocOccurs += allDocuments[i].Contains(word.Unstemmed) ? 1 : 0;
+                DocumentInThreadHandler docThreadHandler = new DocumentInThreadHandler(documents, i, filePathList);
+                docThreadHandlers.Add(docThreadHandler);
+
+                threadListHandling.Add(new Thread(docThreadHandlers[i].Handle));
+                threadListHandling[i].Start();
             }
 
-            return Math.Log10((double)allDocuments.Count / (double)countOfDocOccurs);
+            // Wait all doc-threads:
+            Wait(threadListHandling);
+
+            // Unions dictionary from all documents:
+            for (int i = 0; i < docThreadHandlers.Count; i++)
+            {
+                dictionary.AddRange(docThreadHandlers[i].DocumentDictionary);
+            }
+
+            return dictionary;
+        }
+
+        /// <summary>
+        /// Ожидание завершения всех потоков
+        /// </summary>
+        /// <param name="threadList"></param>
+        private void Wait(List<Thread> threadList)
+        {
+            while (true)
+            {
+                int WorkCount = 0;
+
+                for (int i = 0; i < threadList.Count; i++)
+                {
+                    WorkCount += (threadList[i].IsAlive) ? 0 : 1;
+                }
+
+                if (WorkCount == threadList.Count) break;
+            }
         }
     }
 }
