@@ -15,7 +15,7 @@ namespace TF_IDF_Maker
 
             string fileName = "..//..//..//Data//yelp_labelled.txt";
 
-            List<TFIDFNote> dictionary = tfidfCalculator.GetIFIDFDictionary(fileName);
+            List<TFIDFNote> dictionary = tfidfCalculator.GetIFIDFDictionaryFromStructuredDocument(fileName);
 
             PrintValues(dictionary);
 
